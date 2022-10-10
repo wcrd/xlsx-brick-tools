@@ -9,11 +9,12 @@ import io
 import pandas as pd
 from datetime import datetime
 import sys
-from .relationships import (
+from ..common.relationships import (
     BRICK_RELATIONSHIPS,
     SWITCH_RELATIONSHIPS
 )
-from .modules import helpers, triple_generator as tg, sparql_queries as sq
+from ..common import helpers, sparql_queries as sq
+from . import triple_generator as tg
 
 from typing import TypedDict
 
@@ -179,7 +180,7 @@ class Dataset(rdflib.Dataset):
         if load_brick:
             # get ontology data from package
             data = pkgutil.get_data(
-                __name__, f"ontologies/Brick/{brick_version}/Brick.ttl"
+                __name__, f"../common/ontologies/Brick/{brick_version}/Brick.ttl"
             ).decode()
             # wrap in StringIO to make it file-like
             self.graph(self._graph_namespace['brick']).parse(source=io.StringIO(data), format="turtle")
@@ -191,7 +192,7 @@ class Dataset(rdflib.Dataset):
         if load_switch:
             # get ontology data from package
             data = pkgutil.get_data(
-                __name__, f"ontologies/Switch/{switch_version}/Brick-SwitchExtension.ttl"
+                __name__, f"../common/ontologies/Switch/{switch_version}/Brick-SwitchExtension.ttl"
             ).decode()
             # wrap in StringIO to make it file-like
             self.graph(self._graph_namespace['switch']).parse(source=io.StringIO(data), format="turtle")
@@ -402,7 +403,7 @@ class Graph(rdflib.Graph):
         if load_brick:
             # get ontology data from package
             data = pkgutil.get_data(
-                __name__, f"ontologies/Brick/{brick_version}/Brick.ttl"
+                __name__, f"../common/ontologies/Brick/{brick_version}/Brick.ttl"
             ).decode()
             # wrap in StringIO to make it file-like
             self.parse(source=io.StringIO(data), format="turtle")
@@ -414,7 +415,7 @@ class Graph(rdflib.Graph):
         if load_switch:
             # get ontology data from package
             data = pkgutil.get_data(
-                __name__, f"ontologies/Switch/{switch_version}/Brick-SwitchExtension.ttl"
+                __name__, f"../common/ontologies/Switch/{switch_version}/Brick-SwitchExtension.ttl"
             ).decode()
             # wrap in StringIO to make it file-like
             self.parse(source=io.StringIO(data), format="turtle")

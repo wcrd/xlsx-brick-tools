@@ -5,7 +5,7 @@ import pkgutil
 import rdflib
 import io
 
-from . import helpers
+from ..common import helpers
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -41,7 +41,7 @@ def validateClasses(classes: pd.Series, load_brick: bool, load_switch: bool, bri
         logger.info("Loading Brick Ontology for validation")
         # get ontology data from package
         data = pkgutil.get_data(
-            __name__, f"ontologies/Brick/{brick_version}/Brick.ttl"
+            __name__, f"../common/ontologies/Brick/{brick_version}/Brick.ttl"
         ).decode()
         # wrap in StringIO to make it file-like
         g.parse(source=io.StringIO(data), format="turtle")
@@ -54,7 +54,7 @@ def validateClasses(classes: pd.Series, load_brick: bool, load_switch: bool, bri
         logger.info("Loading Switch Ontology for validation")
         # get ontology data from package
         data = pkgutil.get_data(
-            __name__, f"ontologies/Switch/{switch_version}/Brick-SwitchExtension.ttl"
+            __name__, f"../common/ontologies/Switch/{switch_version}/Brick-SwitchExtension.ttl"
         ).decode()
         # wrap in StringIO to make it file-like
         g.parse(source=io.StringIO(data), format="turtle")

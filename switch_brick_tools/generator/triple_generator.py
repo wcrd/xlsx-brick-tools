@@ -2,7 +2,7 @@ from argparse import ArgumentError
 import rdflib
 from rdflib.collection import Collection
 import logging
-from . import helpers
+from ..common import helpers
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

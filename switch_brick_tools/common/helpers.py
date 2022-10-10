@@ -1,5 +1,7 @@
 import pandas as pd
 import logging
+import rdflib
+from typing import Tuple
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -12,6 +14,10 @@ def format_fragment(fragment):
         return fragment.replace(" ", "_").replace("/", "_")
     else:
         return fragment
+
+def isReference(fragment):
+    if isinstance(fragment, str): return True
+    return False
 
 
 # Validate relationships
@@ -60,7 +66,21 @@ def lookupValue(df_map, custom_value:str):
         logger.warning(f"Id not found for referenced entity: {custom_value}. Skipping.")
         return None
 
+# Validate column exists
+# Checks to see if multilevel column exists
+def validate_column(df_headers, column_tuple) -> Tuple[bool, list]:
+    '''
+    Checks if the given multilevel column field exists in the given column set.
 
+    Returns: column exists->bool
+    '''
+    return column_tuple in df_headers
+
+def generate_namespaces(graph: rdflib.Graph) -> dict:
+    # generate callable Namespace objects from Graph
+    namespaceURIs = dict(graph.namespaces())
+    # create namespace objects to make querying easier
+    return {name: rdflib.Namespace(URI) for name, URI in namespaceURIs.items()}
 
 ##########
 #   FILE HELPERS

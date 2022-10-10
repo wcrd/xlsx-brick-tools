@@ -8,6 +8,7 @@ authors = ["wcrd <11898748+wcrd@users.noreply.github.com>"]
 python = "^3.8"
 pandas = "^1.5.0"
 rdflib = "^6.2.0"
+openpyxl = "^3.0.10"
 
 [tool.poetry.dev-dependencies]
 ipykernel = "^6.16.0"

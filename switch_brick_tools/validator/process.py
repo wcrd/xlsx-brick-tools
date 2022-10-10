@@ -3,7 +3,7 @@ import pandas as pd
 from typing import Tuple
 import rdflib
 
-from .relationships import BRICK_RELATIONSHIPS
+from ..common.relationships import BRICK_RELATIONSHIPS
 from . import validators as vd
 
 logger = logging.getLogger(__name__)
