@@ -3,12 +3,32 @@ This package provides a series of tools to help users generate Graph models of t
 This tool comes with support for Brick and Switch Extension ontologies, as well as the ability to add custom ontologies for validation and generation purposes.
 
 The following functions are provided:
-* xlsx-validator
+* **xlsx-validator**
 Given a xlsx model in the supported template, validate the proposed model.
-* xlsx-generator
+* **xlsx-generator**
 Given an xlsx model in the supported template, generate a graph model.
 
 Each of the tools is described in more detail below.
+
+## Installation
+Create a new environment and install from github:
+
+ ```
+ poetry add git+https://github.com/wcrd/switch-brick-tools.git@main
+ ```
+ In your working file simply import the package
+
+ ```python
+ import switch_brick_tools as sbt
+ ```
+An example working file is provide as 'example.py'.
+
+## Dependencies
+If you need to install dependencies run 
+```buildoutcfg
+poetry install
+```
+(you will need [Poetry](https://python-poetry.org/docs/) installed)
 
 # brick-xlsx-validator
 
@@ -47,38 +67,22 @@ The output of the validator is:
 * set of invalid classes
 * list of pandas dataframes containing rows with duplicated ids per sheet 
 
-## Installation
-Create a new environment and install from github:
 
- ```
- poetry add git+https://github.com/wcrd/switch-brick-tools.git@main
- ```
- In your working file simply import the package
-
- ```python
- import switch_brick_tools as sbt
- ```
-An example working file is provide as 'example.py'.
 
 
 # brick-xlsx-generator
 A tool that takes a template XLSX file (included) and converts it into a Brick TTL model file.
 
-## Dependencies
-If you need to install dependencies run 
-```buildoutcfg
-poetry install
-```
-(you will need [Poetry](https://python-poetry.org/docs/) installed)
+
 
 ## Usage
 1. Intitialize converter as an empty rdf dataset
 ```python
-g = bg.Dataset()
+g = sbt.Dataset()
 ```
 This will automatically load Brick and Switch ontologies. You can pass in custom versions if you need to.
 ```python
-bg.Dataset(load_brick: bool = True, load_switch: bool = True, brick_version: str = "1.2", switch_version: str = "1.1.4")
+sbt.Dataset(load_brick: bool = True, load_switch: bool = True, brick_version: str = "1.2", switch_version: str = "1.1.4")
 ```
 
 2. Process the xlsx input file to generate a populated graph model
@@ -107,7 +111,7 @@ Export options available are:
 For export "building" mode, if you have imported multiple files into separate graphs you can provide the graph name through the `graph_name` parameter to control which building graph is exported in this mode,
 
 ## Note
-The original `bg.Graph()` method is still available if your legacy code uses this. It is recommended to switch to `bg.Dataset()` as the capability is greatly improved.
+The original `sbt.Graph()` method is still available if your legacy code uses this. It is recommended to switch to `sbt.Dataset()` as the capability is greatly improved.
 
 ## References
 Parts of this code are based on code provided by the py-brickschema package.
