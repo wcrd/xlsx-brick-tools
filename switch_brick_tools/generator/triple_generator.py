@@ -134,3 +134,61 @@ def process_tags(g: rdflib.Graph, df, namespaces: dict, multiIndexHeader: str = 
         g.add((namespaces['building'][identifier], namespaces['switch']['hasTagCollection'], tag_list))
 
 
+# process source
+def process_source(g: rdflib.Graph, df, namespaces:dict, multiIndexHeader: str = "Source" ):
+    # validate if input file has source columns
+    sourceExists = multiIndexHeader in df.columns
+    if not sourceExists:
+        print("No source columns have been provided")
+        return
+    
+    logger.info("This method only supports BACnet source information for now.")
+
+    # define BACnet namespace
+    BACNET = rdflib.Namespace("http://data.ashrae.org/bacnet/2020#")
+    g.bind("bacnet", BACNET)
+    # define reference namespace
+    REF = rdflib.Namespace("https://brickschema.org/schema/Brick/ref#")
+    g.bind("ref", REF)
+
+    # iterate rows and create BACnet devices and point external references
+    for idx, row in df.iterrows():
+        # validate that row is valid
+        identifier = helpers.format_fragment(row['Brick']['identifier'])
+        entity_class = helpers.format_fragment(row['Brick']['class'])
+        if entity_class == 0: continue
+
+        # get source info
+        sourceInfo = row[multiIndexHeader]
+        
+        # process if BACnet
+        if str(sourceInfo['Type']).lower() == "bacnet":
+
+            ## generate device object
+            #
+            # id = network _ device_no
+            nw = sourceInfo['BACnet Network']
+            id = namespaces['building'][f'dev_{( nw if nw != "" else "0" )}_{sourceInfo["Device No"]}']
+
+            g.add((id, rdflib.RDF.type, BACNET['BACnetDevice']))
+            g.add((id, BACNET['device-instance'], rdflib.Literal(sourceInfo["Device No"])))
+            g.add((id, BACNET['device-name'], rdflib.Literal(sourceInfo["BACnet Device Name"])))
+            g.add((id, BACNET['ip-address'], rdflib.Literal(sourceInfo["IP Address"])))
+
+
+            ## general external reference bNode on point
+            #
+            # ref:hasExternalReference [
+            #     a ref:BACnetReference ;
+            #     bacnet:object-identifier "analog-value,5" ;
+            #     bacnet:object-name "BLDG-Z410-ZATS" ;
+            #     bacnet:objectOf bldg:sample-device ;
+            # ] .
+            extRef = rdflib.BNode()
+            g.add( (namespaces['building'][identifier], REF['hasExternalReference'], extRef) )
+            g.add( (extRef, rdflib.RDF.type, REF['BACnetReference']) )
+            g.add( (extRef, BACNET['object-identifier'], rdflib.Literal(sourceInfo['Object Address'])) )
+            g.add( (extRef, BACNET['object-name'], rdflib.Literal(sourceInfo['Object Name'])) )
+            g.add( (extRef, BACNET['units-of-measure'], rdflib.Literal(sourceInfo['BACnet Unit Of Measure'])) )
+            g.add( (extRef, BACNET['object-of'], id) )
+

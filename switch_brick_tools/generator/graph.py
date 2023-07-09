@@ -216,7 +216,7 @@ class Dataset(rdflib.Dataset):
         self._namespaces = {name: rdflib.Namespace(URI) for name, URI in self.namespaces()}
     
     
-    def process(self, path_to_xlsx: str, portfolio_name: str = "example", building_name: str = "example_building", relationship_field:tuple = ("Brick", "identifier"), graph_name:str = "building"):
+    def process(self, path_to_xlsx: str, portfolio_name: str = "example", building_name: str = "example_building", relationship_field:tuple = ("Brick", "identifier"), graph_name:str = "building", process_source=True):
         if not os.path.isfile(path_to_xlsx):
             logger.error(f"File not found at specified path: {path_to_xlsx}")
             sys.exit('Error: Input file not found')
@@ -312,6 +312,10 @@ class Dataset(rdflib.Dataset):
         tg.process_tags(g, df_locations, self._namespaces)
         logger.info("Processing Point tags")
         tg.process_tags(g, df_points, self._namespaces)
+        # Source
+        if process_source==True:
+            logger.info("Processing Source information")
+            tg.process_source(g, df_points, self._namespaces)
 
         logger.info("Entities successfully added to model.")
         logger.info("Processing complete.")

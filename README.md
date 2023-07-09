@@ -98,6 +98,7 @@ process(self, path_to_xlsx: str, portfolio_name: str = "example", building_name:
 `portfolio_name` & `building_name` define the URI components that the building entities will be created under. The building URI takes the form: `https://{portfolio_name}.com/{building_name}#` with a default prefix of `building`.\
 `relationship_field`: the field in the template which entities reference each other by. In a Brick model this would always be the 'subject' field, however some flexibility is allowed for in the spreadsheet based definition, allowing entities to reference each other by 'label' rather than a uuid, for example.\
 `graph_name`: If you needed to process multiple inputs into separate graphs, then you can provide a custom graph name per import. If you are only importing one file leave this as default.
+`process_source`: Bool. If true will process source fields for BACnet and create bacnet device entities and add externalrefs to the points showing the bacnet source information.
 
 3. Export Model to TTL
 ```python
@@ -109,6 +110,12 @@ Export options available are:
 * _equipment_locations_systems_: export only building entities and exclude points
 
 For export "building" mode, if you have imported multiple files into separate graphs you can provide the graph name through the `graph_name` parameter to control which building graph is exported in this mode,
+
+<!-- # Extensions
+To keep things separate so that the validator and generator methods are not impact by new development, any additional information is added as part of a post processing step. Eventually this will be incorporated into the main processes; but for now much simpler to just do it here.
+
+## Source Information - BACnet
+Generate device objects and add external references to points which have BACnet sources. -->
 
 ## Note
 The original `sbt.Graph()` method is still available if your legacy code uses this. It is recommended to switch to `sbt.Dataset()` as the capability is greatly improved.
