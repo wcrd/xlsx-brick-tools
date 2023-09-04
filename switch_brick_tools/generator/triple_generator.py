@@ -142,6 +142,14 @@ def process_source(g: rdflib.Graph, df, namespaces:dict, multiIndexHeader: str =
         print("No source columns have been provided")
         return
     
+    # validate core columns are provided
+    core_columns = [ 'Device No', 'BACnet Device Name', "IP Address", 'Object Address', 'Object Name', 'BACnet Unit Of Measure' ]
+    for field in core_columns:
+        if field not in df[multiIndexHeader].columns:
+            logger.error(f"Input df does not have all core BACnet fields defined.\nExpected fields: ({', '.join(core_columns)})\nError on: {field}")
+            logger.info("Aborting adding BACnet source information to model.")
+            return
+    
     logger.info("This method only supports BACnet source information for now.")
 
     # define BACnet namespace

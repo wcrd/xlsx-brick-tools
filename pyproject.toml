@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "switch-brick-tools"
-version = "0.1.0"
+version = "0.1.1"
 description = "Collection of tools to validate and generate building graph models from an Excel template"
 authors = ["wcrd <11898748+wcrd@users.noreply.github.com>"]
 
